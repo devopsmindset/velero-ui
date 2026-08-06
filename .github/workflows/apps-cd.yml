@@ -3,14 +3,13 @@ name: Build and deploy
 on:
   workflow_dispatch:
 
-
 permissions:
   actions: read
   contents: read
-
+  packages: write
 
 env:
-  DOCKER_IMAGE: otwld/velero-ui
+  DOCKER_IMAGE: ghcr.io/devopsmindset/velero-ui-evo
   NX_BASE: main
 
 jobs:
@@ -40,11 +39,12 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-      - name:  Login to Docker Hub
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
