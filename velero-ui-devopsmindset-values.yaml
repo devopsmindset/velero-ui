@@ -1,30 +1,30 @@
-# Helm values for velero-ui-evo deployment
+# Helm values for velero-ui-devopsmindset deployment
 # Usage:
 #   1. Create namespace:
-#        kubectl create namespace velero-ui-evo
+#        kubectl create namespace velero-ui-devopsmindset
 #   2. Create pull secret:
-#        kubectl create secret docker-registry velero-ui-evo-pull-secret \
-#          --namespace velero-ui-evo \
+#        kubectl create secret docker-registry velero-ui-devopsmindset-pull-secret \
+#          --namespace velero-ui-devopsmindset \
 #          --docker-server=registry.eu1-dev.anywhere.navify.com \
 #          --docker-username=<your-username> \
 #          --docker-password=<your-token>
 #   3. Install:
-#        helm install velero-ui-evo ./kubernetes/chart \
-#          --namespace velero-ui-evo \
-#          -f velero-ui-evo-values.yaml
+#        helm install velero-ui-devopsmindset ./kubernetes/chart \
+#          --namespace velero-ui-devopsmindset \
+#          -f velero-ui-devopsmindset-values.yaml
 
 replicaCount: 1
 
 image:
-  repository: registry.eu1-dev.anywhere.navify.com/dev/velero-ui-evo
+  repository: registry.eu1-dev.anywhere.navify.com/dev/velero-ui-devopsmindset
   pullPolicy: Always
   tag: "0.10.2-rollback"
 
 imagePullSecrets:
-  - name: velero-ui-evo-pull-secret
+  - name: velero-ui-devopsmindset-pull-secret
 
-nameOverride: "velero-ui-evo"
-fullnameOverride: "velero-ui-evo"
+nameOverride: "velero-ui-devopsmindset"
+fullnameOverride: "velero-ui-devopsmindset"
 
 configuration:
   logLevel: "info"
@@ -45,7 +45,7 @@ serviceAccount:
   create: true
   automount: true
   annotations: {}
-  name: "velero-ui-evo"
+  name: "velero-ui-devopsmindset"
 
 rbac:
   create: true
