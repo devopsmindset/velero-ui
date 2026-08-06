@@ -4,6 +4,7 @@ export * from './models/config/config.models';
 export * from './models/form/form.models';
 export * from './models/form/backup.models';
 export * from './models/form/restore.models';
+export * from './models/rollback/rollback.models';
 export * from './models/auth/user.models';
 export * from './models/list/list.models';
 export * from './models/k8s/k8s.models';

@@ -17,6 +17,17 @@
         {{ t('global.button.restore.title') }}
       </button>
       <button
+        v-if="can(Action.Create, Resources.RESTORE.plural) && can(Action.Delete, Resources.RESTORE.plural)"
+        :class="{ 'cursor-not-allowed': isDisabled || !backup }"
+        :disabled="!backup || isDisabled"
+        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 dark:bg-orange-500 dark:hover:bg-orange-600 dark:focus:ring-orange-800"
+        type="button"
+        @click="showModalRollback = !showModalRollback"
+      >
+        <FontAwesomeIcon :icon="faRotateLeft" class="!w-4 !h-4 mr-2" />
+        {{ t('global.button.rollback.title') }}
+      </button>
+      <button
         v-if="can(Action.Download, Resources.BACKUP.plural)"
         :class="{
           'cursor-not-allowed': downloadLoading || isDisabled || !backup,
@@ -124,6 +135,27 @@
       />
     </template>
   </VModal>
+  <VModal
+    v-if="showModalRollback"
+    :id="`modal-rollback-${backup?.metadata?.name}`"
+    width="lg:w-6/12"
+    @on-close="showModalRollback = false"
+  >
+    <template #header>
+      <h3 class="text-lg text-gray-500 dark:text-gray-400">
+        {{ t('global.button.rollback.title') }}
+        <span class="font-normal text-sm ml-2">{{
+          backup?.metadata?.name
+        }}</span>
+      </h3>
+    </template>
+    <template #content>
+      <BackupFormRollback
+        :backup="backup"
+        @on-close="showModalRollback = false"
+      />
+    </template>
+  </VModal>
   <div
     id="tooltip-force-delete"
     class="absolute z-10 invisible inline-block px-3 py-2 text-xs text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip"
@@ -144,6 +176,7 @@ import {
   faExclamationCircle,
   faFloppyDisk,
   faQuestionCircle,
+  faRotateLeft,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -153,6 +186,7 @@ import { useDeleteKubernetesObject } from '@velero-ui-app/composables/useDeleteK
 import { useI18n } from 'vue-i18n';
 import VModal from '@velero-ui-app/components/Modals/VModal.vue';
 import BackupFormRestore from '@velero-ui-app/components/Backup/forms/BackupFormRestore.vue';
+import BackupFormRollback from '@velero-ui-app/components/Backup/forms/BackupFormRollback.vue';
 import { Action } from '@velero-ui/shared-types';
 import { can } from '@velero-ui-app/utils/policy.utils';
 import { useFormKitContextById } from '@formkit/vue';
@@ -178,6 +212,7 @@ const forceDeleteContext = useFormKitContextById('force-delete');
 
 const showModalDelete = ref(false);
 const showModalRestore = ref(false);
+const showModalRollback = ref(false);
 
 const isDisabled = computed(() => {
   return (

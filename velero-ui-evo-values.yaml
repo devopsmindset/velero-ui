@@ -1,0 +1,99 @@
+# Helm values for velero-ui-evo deployment
+# Usage:
+#   1. Create namespace:
+#        kubectl create namespace velero-ui-evo
+#   2. Create pull secret:
+#        kubectl create secret docker-registry velero-ui-evo-pull-secret \
+#          --namespace velero-ui-evo \
+#          --docker-server=registry.eu1-dev.anywhere.navify.com \
+#          --docker-username=<your-username> \
+#          --docker-password=<your-token>
+#   3. Install:
+#        helm install velero-ui-evo ./kubernetes/chart \
+#          --namespace velero-ui-evo \
+#          -f velero-ui-evo-values.yaml
+
+replicaCount: 1
+
+image:
+  repository: registry.eu1-dev.anywhere.navify.com/dev/velero-ui-evo
+  pullPolicy: Always
+  tag: "0.10.2-rollback"
+
+imagePullSecrets:
+  - name: velero-ui-evo-pull-secret
+
+nameOverride: "velero-ui-evo"
+fullnameOverride: "velero-ui-evo"
+
+configuration:
+  logLevel: "info"
+  general:
+    secretPassPhrase:
+      value: "this is not a secret passphrase"
+      useSecret: true
+    veleroNamespace: "velero"
+    grafanaUrl: ""
+  policies:
+    enabled: true
+    useConfigMap: true
+    value: |
+      # Allow all users full access (dev environment)
+      u,*,manage,all
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: "velero-ui-evo"
+
+rbac:
+  create: true
+  clusterAdministrator: true
+  clusterAdministratorName: cluster-admin
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+livenessProbe:
+  enabled: true
+  path: /health
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+
+readinessProbe:
+  enabled: true
+  path: /health
+  initialDelaySeconds: 30
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 6
+  successThreshold: 1
+
+autoscaling:
+  enabled: false
+
+env:
+  - name: BASIC_AUTH_ENABLED
+    value: "true"
+
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}

@@ -38,6 +38,7 @@ import { PodVolumeRestoreModule } from '@velero-ui-api/modules/pod-volume-restor
 import { KubernetesModule, LoadFrom } from '@otwld/nestjs-kubernetes';
 import { K8S_CONNECTION } from '@velero-ui-api/shared/utils/k8s.utils';
 import { CaslModule } from './shared/modules/casl/casl.module';
+import { RollbackModule } from './modules/rollback/rollback.module';
 import { CacheModule } from "@nestjs/cache-manager";
 
 
@@ -113,6 +114,7 @@ import { CacheModule } from "@nestjs/cache-manager";
     AuthModule,
     LoggerModule,
     CaslModule,
+    RollbackModule,
   ],
   controllers: [],
   providers: [

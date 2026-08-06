@@ -70,6 +70,10 @@
         "title": "Restore",
         "loading": "Restoring"
       },
+      "rollback": {
+        "title": "Rollback",
+        "loading": "Rolling back"
+      },
       "delete": {
         "title": "Delete",
         "loading": "Deleting"
@@ -708,6 +712,39 @@
           "title": "Logs are only available when Velero UI is deployed inside K8S Cluster"
         }
       }
+    }
+  },
+  "rollback": {
+    "step": {
+      "preview": "Preview",
+      "confirm": "Confirm"
+    },
+    "progress": {
+      "title": "Rollback Progress",
+      "scaleDown": "Scaling down deployments",
+      "waitPods": "Waiting for pods to terminate",
+      "deletePvcs": "Deleting PVCs",
+      "createRestore": "Creating Velero Restore",
+      "waitRestore": "Waiting for restore completion",
+      "scaleUp": "Scaling up deployments"
+    },
+    "preview": {
+      "title": "Rollback Preview",
+      "description": "The following actions will be performed in this namespace:",
+      "deployments": "Deployments to scale down",
+      "statefulSets": "StatefulSets to scale down",
+      "pvcs": "PVCs to delete and restore",
+      "warning": "This is a destructive operation. Existing PVCs will be permanently deleted and restored from the backup.",
+      "errorLoading": "Unable to load rollback preview."
+    },
+    "confirm": {
+      "title": "Confirm Rollback",
+      "typeNamespace": "Type the namespace name to confirm:",
+      "warning": "This operation cannot be undone. All running workloads in the namespace will be stopped and PVCs will be deleted before restoring from backup."
+    },
+    "complete": {
+      "success": "Rollback completed successfully",
+      "failed": "Rollback failed"
     }
   }
 }
